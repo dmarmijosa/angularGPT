@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewChecked,
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   inject,
   signal,
+  ViewChild,
 } from '@angular/core';
 import {
   ChatMessageComponent,
+  GptMessageOrthographyComponent,
   MyMessageComponent,
   TextMessageBoxComponent,
   TextMessageBoxEvent,
@@ -23,6 +28,7 @@ import { OpenAiService } from 'app/presentation/services/openai.service';
   imports: [
     CommonModule,
     ChatMessageComponent,
+    GptMessageOrthographyComponent,
     MyMessageComponent,
     TypingLoaderComponent,
     TextMessageBoxComponent,
@@ -31,18 +37,73 @@ import { OpenAiService } from 'app/presentation/services/openai.service';
   templateUrl: './orthographyPage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class OrthographyPageComponent {
-  messages = signal<Message[]>([{ text: 'Hola mundo', isGpt: true }]);
+export default class OrthographyPageComponent implements AfterViewChecked, AfterViewInit {
+  messages = signal<Message[]>([]);
   isLoading = signal(false);
   openAiService = inject(OpenAiService);
+  @ViewChild('chatMessagesContainer')
+  private chatMessagesContainer!: ElementRef;
+  private mutationObserver!: MutationObserver;
+  private wasAtBottom = true;
 
   handleMessage(prompt: string) {
-    console.log({ prompt });
+    this.isLoading.set(true);
+    this.messages.update((prev) => [
+      ...prev,
+      {
+        isGpt: false,
+        text: prompt,
+      },
+    ]);
+
+    this.openAiService.checkOrthography(prompt).subscribe({
+      next: (resp) => {
+        this.messages.update((prev) => [
+          ...prev,
+          {
+            isGpt: true,
+            text: resp.message,
+            info: resp,
+          },
+        ]);
+      },
+      complete: () => this.isLoading.set(false),
+    });
   }
-  handleMessageWithFile({ prompt, file }: TextMessageInterface) {
-    console.log({ prompt, file });
+  ngAfterViewInit(): void {
+    const container = this.chatMessagesContainer.nativeElement;
+
+    // Configurar un MutationObserver para observar cambios en el contenedor
+    this.mutationObserver = new MutationObserver(() => {
+      if (this.wasAtBottom) {
+        this.scrollToBottom();
+      }
+    });
+
+    this.mutationObserver.observe(container, {
+      childList: true, // Observar cuando se agregan o eliminan elementos
+    });
+
+    container.addEventListener('scroll', () => {
+      // Comprobar si el usuario está en la parte inferior
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      this.wasAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+    });
   }
-  handleMessageWithSelect(event: TextMessageBoxEvent) {
-    console.log({ event });
+
+  ngAfterViewChecked(): void {
+    if (this.wasAtBottom) {
+      this.scrollToBottom();
+    }
+  }
+
+  private scrollToBottom(): void {
+    const container = this.chatMessagesContainer.nativeElement;
+    container.scrollTop = container.scrollHeight;
+  }
+
+  ngOnDestroy(): void {
+    // Desconectar el observer cuando el componente se destruye
+    this.mutationObserver.disconnect();
   }
 }

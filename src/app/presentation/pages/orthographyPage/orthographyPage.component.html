@@ -1,25 +1,25 @@
 <div class="chat-container">
-    <div class="chat-messages">
-        <div class="grid gap-y-2">
-            <!-- chat messages -->
-             <app-chat-message [text]="'hola mundo desde GPT'"/>
-             <app-my-message [text]="'saludo'" />
-             @for(message of messages();track $index){
-                @if(message.isGpt){
-                    <app-chat-message  [text]="message.text"/>
-                }@else{
-                    <app-my-message [text]="message.text" />
-                }
-             }
-
-             @if(isLoading()){
-                <app-typing-loader/>
-             }
-
-        </div>
+  <div class="chat-messages" #chatMessagesContainer>
+    <div class="grid gap-y-2">
+      <!-- chat messages -->
+      <app-chat-message [text]="'Escribe el texto que quieres que revise'" />
+      @for(message of messages();track $index){ @if(message.isGpt){
+      <app-gpt-message-orthography
+        [text]="message.text"
+        [errors]="message.info!.errors"
+        [userScore]="message.info!.userScore"
+      />
+      }@else{
+      <app-my-message [text]="message.text" />
+      } } @if(isLoading()){
+      <app-typing-loader />
+      }
     </div>
-    <!-- messagesbox -->
-     <!-- <app-text-message-box placeholder="Escribe aquí" (onMessage)="handleMessage($event)"/> -->
-     <!-- <app-text-message-box-file placeholder="Escribe aquí" (onMessage)="handleMessageWithFile($event)"/> -->
-    <app-text-message-box-select placeholder="Escribe aquí" [options]="[{id:'1', text:'uno'},{id:'2', text:'dos',}]" (onMessage)="handleMessageWithSelect($event)"/>
+  </div>
+  <!-- messagesbox -->
+  <app-text-message-box
+    placeholder="Escribe aquí"
+    (onMessage)="handleMessage($event)"
+    [disableCorrections]="true"
+  />
 </div>
