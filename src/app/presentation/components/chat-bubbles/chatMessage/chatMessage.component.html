@@ -11,6 +11,9 @@
       <markdown>
         {{ text }}
       </markdown>
+      @if (audioUrl) {
+        <audio controls [src]="audioUrl" autoplay ></audio>
+      }
     </div>
   </div>
 </div>
