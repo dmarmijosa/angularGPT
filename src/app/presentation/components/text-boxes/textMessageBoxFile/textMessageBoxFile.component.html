@@ -12,7 +12,8 @@
         }
       </div>
     </button>
-    <input type="file" #fileInput hidden (change)="handleSelectedFile($event)"/>
+    <pre>{{typeOfFile()}}</pre>
+    <input type="file" #fileInput hidden (change)="handleSelectedFile($event)" [accept]="typeOfFile()"/>
   </div>
   <div class="flex-grow">
     <div class="relative w-full">

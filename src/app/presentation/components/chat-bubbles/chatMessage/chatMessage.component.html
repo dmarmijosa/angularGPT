@@ -14,6 +14,11 @@
       @if (audioUrl) {
         <audio controls [src]="audioUrl" autoplay ></audio>
       }
+      @if (imageInfo) {
+        <figure>
+          <img [src]="imageInfo.url" [alt]="imageInfo.alt" class="rounded-xl w-96 h-96 object-cover">
+        </figure>
+      }
     </div>
   </div>
 </div>

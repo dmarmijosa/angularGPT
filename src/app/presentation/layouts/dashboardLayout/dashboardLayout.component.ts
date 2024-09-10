@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SidebarMenuItemComponent } from '../../components/sidebarMenuItem/sidebarMenuItem.component';
 import { routes } from '../../../app.routes';
@@ -13,4 +13,10 @@ import { routes } from '../../../app.routes';
 })
 export class DashboardLayoutComponent {
   public routes = routes[0].children?.filter((route) => route.data);
+  isOpenMenu = signal(false);
+  isMenuOpen = false;
+
+  toggleMenu() {
+    this.isOpenMenu.update(prev=> prev = !prev);
+  }
 }

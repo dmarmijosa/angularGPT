@@ -2,14 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+/* Estilo base para todo */
 html, body {
   background-color: #000000;
   color: white;
   font-family: 'Open Sans', sans-serif;
-
 }
-
 
 h1 {
   @apply text-3xl font-bold mb-4;
@@ -19,42 +17,51 @@ p {
   @apply mb-4;
 }
 
+/* Asegurar que la barra lateral no ocupe demasiado espacio */
+nav {
+  @apply sm:w-[370px]; /* Mantener este ancho solo en pantallas grandes */
+}
+@media (max-width: 640px) {
+  nav {
+    width: 80%; /* Menú en móviles ocupará el 80% del ancho */
+    background-color: #1a1a1a !important; /* Fondo oscuro */
+    transition: transform 0.3s ease-in-out; /* Transición suave */
+  }
+
+  .btn-primary {
+    @apply text-sm py-1 px-2; /* Botones más pequeños */
+  }
+
+  h1 {
+    @apply text-xl !important;
+    color: white !important; /* Texto más pequeño en móviles */
+  }
+}
 ul {
   @apply list-disc list-inside;
 }
-
-strong {
-  @apply font-bold text-indigo-400 text-xl;
-}
-
-em {
-  @apply italic text-pink-500;
-}
-
 
 .btn-primary {
   @apply bg-indigo-500 text-white font-bold py-2 px-4 rounded-xl hover:bg-indigo-700 transition-all duration-200 ease-in-out;
 }
 
-.btn-primary:disabled {
-  @apply bg-indigo-500 text-white font-bold py-2 px-4 rounded-xl opacity-50 cursor-not-allowed;
-}
-
+/* Para chat en escritorio */
 .chat-container {
-  @apply flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-white bg-opacity-5 h-[calc(100vh-90px)] p-4 w-[calc(100vw-500px)];
+  @apply flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-white bg-opacity-5 h-[calc(100vh-90px)] p-4;
+  width: calc(100vw - 400px); /* El chat debe ocupar todo el espacio restante */
+  margin: 0 auto;
 }
 
+/* Para el chat de mensajes */
 .chat-messages {
-  /* @apply flex flex-col h-full overflow-x-auto mb-4 overflow-scroll; */
   @apply flex flex-col h-full mb-4 overflow-auto;
 }
 
-
-/* Animations */
-
-.fade-in { animation: fadeIn .3s; }
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+@media (max-width: 1024px) {
+  /* Ancho flexible en tabletas y móviles */
+  .chat-container {
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 1rem; /* Ajustar el padding en pantallas más pequeñas */
+    height: calc(100vh - 80px); /* Ajustar la altura */
+  }
 }

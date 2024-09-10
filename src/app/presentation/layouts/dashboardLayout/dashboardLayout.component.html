@@ -1,36 +1,72 @@
-<main class="flex flex-row mt-7">
+<main class="flex flex-col sm:flex-row mt-7">
+  <!-- Nav para desktop/tablet -->
   <nav
-    class="hidden sm:flex flex-col ml-5 w-[370px] min-h-[calc(100vh-3.0rem)] bg-white bg-opacity-10 p-5 rounded-3xl"
+    class="hidden sm:flex flex-col ml-5 w-full sm:w-[370px] min-h-[calc(100vh-3.0rem)] bg-white bg-opacity-10 p-5 rounded-3xl"
   >
     <h1
       class="font-bold text-lg lg:text-3xl bg-gradient-to-br from-white via-white/50 bg-clip-text text-transparent"
     >
       AngularGPT<span class="text-indigo-500">.</span>
     </h1>
-    <span class="text-xl">Bienvenido</span>
+    <span class="text-base lg:text-xl">Bienvenido</span>
 
     <div class="border-gray-700 border my-3"></div>
 
     <!-- Nav Links -->
-    @for(route of routes; track $index){
     <app-sidebar-menu-item
+      *ngFor="let route of routes; let i = index"
       [description]="route.data!['description']"
       [title]="route.data!['title']"
       [path]="route.path!"
       [icon]="route.data!['icon']"
-    />
-    }
-
-    <!-- End Nav Links -->
+    >
+    </app-sidebar-menu-item>
   </nav>
 
+  <!-- Sección de contenido principal -->
   <section
-    class="mx-3 sm:mx-20 flex flex-col w-full h-[calc(100vh-50px)] bg-white bg-opacity-10 p-5 rounded-3xl"
+    class="mx-3 sm:mx-20 flex flex-col w-full h-auto sm:h-[calc(100vh-50px)] bg-white bg-opacity-10 p-5 rounded-3xl"
   >
-    <div class="flex h-full flex-row">
+    <div class="flex h-full flex-col sm:flex-row">
+      <!-- Botón de menú móvil -->
+      <button
+        class="sm:hidden bg-indigo-500 text-white p-2 rounded-lg mb-4"
+        (click)="toggleMenu()"
+      >
+        Menú
+      </button>
+
+      <!-- Contenido principal -->
       <div class="flex flex-col flex-auto p-1">
-        <router-outlet />
+        <router-outlet></router-outlet>
       </div>
     </div>
   </section>
+
+  <!-- Nav para móviles -->
+  <nav
+    *ngIf="isMenuOpen"
+    class="fixed inset-0 z-50 flex sm:hidden flex-col bg-white bg-opacity-90 p-5 transition-transform duration-300 ease-in-out transform translate-x-0"
+    [ngClass]="{'translate-x-full': !isMenuOpen}"
+  >
+    <button class="text-right mb-4" (click)="toggleMenu()">Cerrar</button>
+
+    <h1 class="font-bold text-lg bg-gradient-to-br from-black via-black/50 bg-clip-text text-transparent">
+      AngularGPT<span class="text-indigo-500">.</span>
+    </h1>
+
+    <span class="text-sm mb-4">Bienvenido</span>
+
+    <div class="border-gray-700 border my-3"></div>
+
+    <!-- Nav Links -->
+    <app-sidebar-menu-item
+      *ngFor="let route of routes; let i = index"
+      [description]="route.data!['description']"
+      [title]="route.data!['title']"
+      [path]="route.path!"
+      [icon]="route.data!['icon']"
+    >
+    </app-sidebar-menu-item>
+  </nav>
 </main>

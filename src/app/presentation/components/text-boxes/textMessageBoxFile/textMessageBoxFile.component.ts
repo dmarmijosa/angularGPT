@@ -5,9 +5,12 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnInit,
   Output,
+  signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 export interface TextMessageInterface {
   file: File;
@@ -21,11 +24,21 @@ export interface TextMessageInterface {
   templateUrl: './textMessageBoxFile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextMessageBoxFileComponent {
+export class TextMessageBoxFileComponent implements OnInit {
   @Input() placeholder: string = '';
   @Input() disableCorrections: boolean = false;
 
   @Output() onMessage = new EventEmitter<TextMessageInterface>();
+  private router = inject(Router);
+  typeOfFile =  signal('');
+
+  ngOnInit(): void {
+    if (this.router.url === '/audio-to-text') {
+      this.typeOfFile.set('audio/mp3');
+    } else {
+      this.typeOfFile.set('application/pdf'); // Puedes cambiar este valor según lo que necesites en otras rutas
+    }
+  }
 
   private fb = inject(FormBuilder);
   form = this.fb.group({
