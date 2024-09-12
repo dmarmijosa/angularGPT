@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SidebarMenuItemComponent } from '../../components/sidebarMenuItem/sidebarMenuItem.component';
 import { routes } from '../../../app.routes';
+import { HelpersService } from 'app/presentation/services/helpers.service';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -12,11 +18,24 @@ import { routes } from '../../../app.routes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardLayoutComponent {
-  public routes = routes[0].children?.filter((route) => route.data);
   isOpenMenu = signal(false);
-  isMenuOpen = false;
+  private screenService = inject(HelpersService);
+  routes = signal(routes[0].children?.filter((route) => route.data));
 
+  constructor() {
+    this.screenService.isDesktop$.subscribe((resp) => {
+      if (!resp) {
+        this.routes.set(
+          routes[0].children?.filter(
+            (route) => route.data && route.path != 'image-tunning'
+          )
+        );
+      } else {
+        this.routes.set(routes[0].children?.filter((route) => route.data));
+      }
+    });
+  }
   toggleMenu() {
-    this.isOpenMenu.update(prev=> prev = !prev);
+    this.isOpenMenu.update((prev) => (prev = !prev));
   }
 }

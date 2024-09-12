@@ -14,7 +14,7 @@
 
     <!-- Nav Links -->
     <app-sidebar-menu-item
-      *ngFor="let route of routes; let i = index"
+      *ngFor="let route of routes(); let i = index"
       [description]="route.data!['description']"
       [title]="route.data!['title']"
       [path]="route.path!"
@@ -45,9 +45,9 @@
 
   <!-- Nav para móviles -->
   <nav
-    *ngIf="isMenuOpen"
+    *ngIf="isOpenMenu()"
     class="fixed inset-0 z-50 flex sm:hidden flex-col bg-white bg-opacity-90 p-5 transition-transform duration-300 ease-in-out transform translate-x-0"
-    [ngClass]="{'translate-x-full': !isMenuOpen}"
+    [ngClass]="{'translate-x-full': !isOpenMenu()}"
   >
     <button class="text-right mb-4" (click)="toggleMenu()">Cerrar</button>
 
@@ -61,7 +61,7 @@
 
     <!-- Nav Links -->
     <app-sidebar-menu-item
-      *ngFor="let route of routes; let i = index"
+      *ngFor="let route of routes(); let i = index"
       [description]="route.data!['description']"
       [title]="route.data!['title']"
       [path]="route.path!"

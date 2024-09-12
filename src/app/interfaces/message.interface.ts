@@ -5,9 +5,9 @@ export interface Message {
   isGpt: boolean;
   info?: OrthographyResponse;
   audioUrl?: string;
-  imageInfo?:imageInfo;
+  imageInfo?:imagenInfo;
 }
-interface imageInfo {
+export interface imagenInfo {
   url: string;
   alt: string;
 }
