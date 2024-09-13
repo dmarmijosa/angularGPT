@@ -3,10 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 /* Estilo base para todo */
-html, body {
+html,
+body {
   background-color: #000000;
   color: white;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 h1 {
@@ -64,4 +65,8 @@ ul {
     padding: 1rem; /* Ajustar el padding en pantallas más pequeñas */
     height: calc(100vh - 80px); /* Ajustar la altura */
   }
+}
+/* Mostrar el tooltip al hacer hover */
+.relative:hover .tooltip-text {
+  @apply block; /* Mostrar el tooltip */
 }

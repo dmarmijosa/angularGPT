@@ -1,1 +1,32 @@
-<p>assistantPage works!</p>,
+<div class="chat-container">
+  <div class="chat-messages">
+    <div class="grid gap-y-2">
+        <!-- chat messages -->
+        <app-chat-message
+            [text]="'Hola soy Lexio, un asistente medico virtual'"
+        />
+        @for(message of messages();track $index){ @if(message.isGpt){
+        <app-chat-message [text]="message.text" />
+        }@else{
+        <app-my-message [text]="message.text" />
+        } } @if(isLoading()){
+        <app-typing-loader />
+        }
+        </div>
+    </div>
+    <!-- messagesbox -->
+    <app-text-message-box
+        placeholder="Escribe aquí"
+        (onMessage)="handleMessage($event)"
+    />
+    <div class="relative">
+        <button class="floating-btn fixed sm:right-9 sm:bottom-[9rem] bottom-20 right-5 bg-green-500 text-white rounded-full w-12 h-12 flex justify-center items-center text-xl shadow-lg hover:bg-green-400 transition duration-300 ease-in-out" (click)="clearMessage()">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </button>
+
+        <!-- Tooltip -->
+        <span class="tooltip-text hidden absolute bottom-20 sm:right-4 right-0 sm:bottom-[6rem] mb-2 bg-white text-black text-sm py-1 px-2 rounded-lg shadow-lg">
+            Eliminar chat
+        </span>
+    </div>
+</div>

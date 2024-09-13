@@ -2,7 +2,7 @@
     <div class="chat-messages">
         <div class="grid gap-y-2">
             <!-- chat messages -->
-             <app-chat-message [text]="'Escribe el exto a convertir en audio'"/>
+             <app-chat-message [text]="'Escribe el texto y selecciona la voz a convertir en audio'"/>
              @for(message of messages();track $index){
                 @if(message.isGpt){
                     <app-chat-message  [text]="message.text" [audioUrl]="message.audioUrl"/>
